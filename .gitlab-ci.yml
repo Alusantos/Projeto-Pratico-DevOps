@@ -1,0 +1,20 @@
+stages:
+  - build
+  - deploy
+
+criar_imagens:
+  stage: build
+  tags:
+    - aws
+  script:
+    - docker build -t aluisio23/aws-devops:1.0 App/.
+    - docker push aluisio23/aws-devops:1.0
+
+executar_imagens:
+  stage: deploy
+  needs: 
+    - criar_imagens
+  tags:
+    - aws
+  script:
+    - docker run -dti --name webserver -p 80:80 aluisio23/aws-devops:1.0
